@@ -1,3 +1,4 @@
+using BookingEngine.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
@@ -9,23 +10,23 @@ using System.Threading.Tasks;
 
 namespace BookingEngine.Pages
 {
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public class ErrorModel : PageModel
     {
-        public string RequestId { get; set; }
+        private ApplicationDbContext _db;
 
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
-
-        private readonly ILogger<ErrorModel> _logger;
-
-        public ErrorModel(ILogger<ErrorModel> logger)
+        public ErrorModel(ApplicationDbContext context)
         {
-            _logger = logger;
+            _db = context;
         }
 
-        public void OnGet()
+        public int Rid { get; set; }
+
+        public IEnumerable<Room> Room { get; set; }
+
+        public void OnGet(int id)
         {
-            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            Rid = id;
+            Room = _db.Rooms.ToList();
         }
     }
 }

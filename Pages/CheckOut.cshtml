@@ -88,7 +88,7 @@
                     <option disabled selected>Select Country</option>
                     <option>United States</option>
                     <option>India</option>
-                </select>
+                </select><br />
                 <span asp-validation-for="GuestInfo.Country" class="text-danger"></span>
             </div>
             <div class="pt-3" style="float:left;">
@@ -167,6 +167,7 @@
         [BindProperty]
         public PaymentInfo PaymentInfo { get; set; }
 
+        [BindProperty]
         public IEnumerable<Reservation> Reservation { get; set; }
 
         public IEnumerable<Room> Room { get; private set; }
@@ -174,6 +175,7 @@
         [BindProperty]
         public Booking Booking { get; set; }
 
+        [BindProperty]
         public IEnumerable<Booking> Book { get; set; }
 
         public Room RDetails { get; set; }
@@ -231,20 +233,19 @@
                 pi.FullNameOnCard = PaymentInfo.FullNameOnCard;
                 pi.Cvv = PaymentInfo.Cvv;
                 _db.PaymentInfo.Add(pi);
-
-                //var bcin = _db.Reservations.FirstOrDefault(b => b.ReservationId == bReservationId - 1).CheckIn;
-                //var bcout = _db.Reservations.FirstOrDefault(b => b.ReservationId == bReservationId - 1).CheckOut;
-                //foreach (var item in _db.Bookings)
-                //{
-                //    if (item.Reservation.CheckIn == bcin && item.Reservation.CheckOut == bcout)
-                //    {
-                //        return RedirectToPage("Error");
-                //    }
-                //}
-                //if (Book.FirstOrDefault(r=>r.Reservation.CheckIn == bcin).Reservation.CheckIn==bcin && Book.FirstOrDefault(r=>r.Reservation.CheckOut==bcout).Reservation.CheckOut==bcout)
-                //{
-                //    return RedirectToPage("Error");
-                //}
+                var bCheckIn = _db.Reservations.Find(bReservationId).CheckIn;
+                var bCheckOut = _db.Reservations.Find(bReservationId).CheckOut;
+                foreach (var item in _db.Bookings)
+                {
+                    if (_db.Reservations.Find(item.ReservationId).CheckIn == bCheckIn && _db.Reservations.Find(item.ReservationId).CheckOut == bCheckOut)
+                    {
+                        if (_db.Bookings.Any(x => x.RoomId == bRoomId))
+                        {
+                            return RedirectToPage("Error");
+                        }
+                    }
+                }
+                //CheckAvailability();
                 Booking bk = new Booking();
                 bk.RoomId = bRoomId;
                 bk.ReservationId = bReservationId;
@@ -259,12 +260,23 @@
             }
         }
 
-        //public IActionResult CheckAvailability(Booking booking)
+        //public IActionResult CheckAvailability()
         //{
-        //    if(booking.Reservation.CheckIn == Reservation.ElementAt(booking.ReservationId).CheckIn && booking.Reservation.CheckOut == Reservation.ElementAt(booking.ReservationId).CheckOut && booking.RoomId == bRoomId)
+        //    int bReservationId = _db.Reservations.OrderBy(r => r.ReservationId).Select(r => r.ReservationId).LastOrDefault();
+        //    int bRoomId = Rid;
+        //    var bCheckIn = _db.Reservations.Find(bReservationId).CheckIn;
+        //    var bCheckOut = _db.Reservations.Find(bReservationId).CheckOut;
+        //    foreach (var item in _db.Bookings)
         //    {
-        //        return RedirectToPage("Error");
+        //        if (_db.Reservations.Find(item.ReservationId).CheckIn == bCheckIn && _db.Reservations.Find(item.ReservationId).CheckOut == bCheckOut)
+        //        {
+        //            if (_db.Bookings.Any(x => x.RoomId == bRoomId))
+        //            {
+        //                return RedirectToPage("Error");
+        //            }
+        //        }
         //    }
+        //    return new EmptyResult();
         //}
     }
 }

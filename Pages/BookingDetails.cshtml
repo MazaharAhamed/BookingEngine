@@ -34,10 +34,10 @@
         @foreach (var item in Model.Booking)
         {
             var gname = item.GuestInfo.FirstName + item.GuestInfo.LastName;
-            //var r = Model.Room.ElementAt(item.RoomId-1).RoomName;
+            var rname = Model.Room.ElementAt(item.RoomId - 1).RoomName;
             <tr>
                 <td>@Html.DisplayFor(b => item.BookingId)</td>
-                <td>@Html.DisplayFor(b => item.RoomId)</td>
+                <td>@rname</td>
                 <td>@Html.DisplayFor(b => item.Reservation.CheckIn) - @Html.DisplayFor(b => item.Reservation.CheckOut)</td>
                 <td>@gname</td>
                 <td>@Html.DisplayFor(b => item.Reservation.Adults)</td>

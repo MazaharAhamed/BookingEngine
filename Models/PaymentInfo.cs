@@ -15,8 +15,8 @@ namespace BookingEngine.Models
         [ForeignKey("GuestInfo")]
         public int GuestId { get; set; }
 
-        [DataType(DataType.CreditCard)]
-        [Required]
+        [DataType(DataType.CreditCard, ErrorMessage = "Invalid Credit Card")]
+        [Required(ErrorMessage = "Credit Card is Required")]
         public long CreditCard { get; set; }
 
         [Display(Name = "Exp. Date (MM/YY)")]
@@ -30,7 +30,7 @@ namespace BookingEngine.Models
         public string FullNameOnCard { get; set; }
 
         [Required]
-        [Range(100, 999)]
+        [Range(100, 999, ErrorMessage = "Invalid Cvv")]
         public int Cvv { get; set; }
 
         public GuestInfo GuestInfo { get; set; }

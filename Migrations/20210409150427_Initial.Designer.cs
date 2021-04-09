@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingEngine.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210309170610_Initial")]
+    [Migration("20210409150427_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,8 +79,8 @@ namespace BookingEngine.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PhoneNumber")
-                        .HasColumnType("int");
+                    b.Property<long>("PhoneNumber")
+                        .HasColumnType("bigint");
 
                     b.Property<int>("ZipCode")
                         .HasColumnType("int");

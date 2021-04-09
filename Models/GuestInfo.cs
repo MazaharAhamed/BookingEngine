@@ -22,12 +22,12 @@ namespace BookingEngine.Models
         [Required]
         public string Email { get; set; }
 
-        //[DataType(DataType.PhoneNumber)]
+        //[DataType(DataType.PhoneNumber, ErrorMessage = "Invalid Phone Number")]
         //[RegularExpression(@"/0\d?\d{9,10}/g$", ErrorMessage = "Wrong mobile")]
-        [Range(1000000000, 9999999999, ErrorMessage = "Invalid Phone Number")]
-        [Phone]
+        //[Range(1000000000, 9999999999, ErrorMessage = "Invalid Phone Number")]
         [Required]
-        public int PhoneNumber { get; set; }
+        [RegularExpression("[0-9]{10}", ErrorMessage = "Invalid")]
+        public long PhoneNumber { get; set; }
 
         [Required]
         public string HomeAddress { get; set; }
