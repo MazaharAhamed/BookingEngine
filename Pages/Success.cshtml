@@ -1,0 +1,31 @@
+﻿@page
+@model SuccessModel
+@using BookingEngine.Models;
+@using Microsoft.AspNetCore.Mvc.RazorPages
+@{
+}
+<html>
+<body>
+    @{var id = Model.Rid - 1; }
+    <h5>Your Booking for <label style="color:#0066cc;">"@Model.Room.ElementAt(id).RoomName"</label> has been successfully done.</h5>
+</body>
+</html>
+@functions{
+    public class SuccessModel : PageModel
+    {
+        private ApplicationDbContext _db;
+
+        public SuccessModel(ApplicationDbContext context)
+        {
+            _db = context;
+        }
+
+        public int Rid { get; set; }
+        public IEnumerable<Room> Room { get; set; }
+        public void OnGet(int id)
+        {
+            Rid = id;
+            Room = _db.Rooms.ToList();
+        }
+    }
+}

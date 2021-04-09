@@ -1,0 +1,149 @@
+﻿@page
+@model IndexModel
+@using BookingEngine.Models;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@{
+}
+<html>
+<head>
+    <center style="position:absolute; top:110px; right:720px;"><strong>Welcome! Please select your dates below</strong></center>
+    <style>
+        .myDiv {
+            position: absolute;
+            top: 30%;
+            left: 38%;
+            margin-top: -50px;
+            margin-left: -100px;
+        }
+
+        .buttonColumn {
+            position: absolute;
+            top: 220%;
+            left: 57%;
+        }
+
+        .checko {
+            position: absolute;
+            top: 0px;
+            right: 90px;
+        }
+
+        input, label {
+            display: block;
+        }
+
+        input {
+            margin-right: 40px;
+        }
+
+        .adult {
+            position: absolute;
+            left: -15px;
+        }
+    </style>
+</head>
+<body>
+    <form method="post">
+        <div class="myDiv">
+            <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+            <div class="row">
+                <div class="form-group">
+                    <label asp-for="Reservation.CheckIn">Check In</label>
+                    <input value="" asp-for="Reservation.CheckIn" />
+                    <span asp-validation-for="Reservation.CheckIn" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Reservation.CheckOut">Check Out</label>
+                    <input value="" asp-for="Reservation.CheckOut" />
+                    <span asp-validation-for="Reservation.CheckOut" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="adult">
+                <label asp-for="Reservation.Adults">Adults</label>
+                <input asp-for="Reservation.Adults" />
+                <span asp-validation-for="Reservation.Adults" class="text-danger"></span>
+            </div>
+            <input type="submit" class="btn btn-primary buttonColumn" asp-route-resid="@Model.ResId" value="Search for Rooms" />
+            </div>
+    </form>
+</body>
+</html>
+@functions{
+    public class IndexModel : PageModel
+    {
+        private ApplicationDbContext _db;
+
+        public IndexModel(ApplicationDbContext context)
+        {
+            _db = context;
+        }
+
+        [BindProperty]
+        public Reservation Reservation { get; set; }
+
+        public int lastid { get; set; }
+
+        public int? ResId { get; set; }
+        public string disp { get; set; }
+
+        public async Task<IActionResult> OnPost(int resid)
+        {
+            if (ModelState.IsValid)
+            {
+                await _db.Reservations.AddAsync(Reservation);
+                await _db.SaveChangesAsync();
+                ResId = Reservation.ReservationId;
+                return RedirectToPage($"/Rooms", new { ResId = ResId });
+            }
+            else
+            {
+                return Page();
+            }
+        }
+
+
+        //public IActionResult OnPost()
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _db.Reservations.Add(Reservation);
+        //        _db.SaveChanges();
+        //        if (GetResId() == null)
+        //        {
+        //            disp = "No Reservation found";
+        //        }
+        //        ResId = Reservation.ReservationId;
+        //        return RedirectToPage($"/Rooms", new { ResId = ResId });
+        //    }
+        //    else
+        //    {
+        //        return Page();
+        //    }
+        //}
+
+        //public int? GetResId()
+        //{
+        //    return _db.Reservations.OrderBy(r => Reservation.ReservationId).Select(r => r.ReservationId).LastOrDefault();
+        //}
+
+        //public IActionResult OnPost()
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _db.Reservations.Add(Reservation);
+        //        _db.SaveChanges();
+        //        int test = _db.Reservations.OrderBy(r => r.ReservationId).Select(r => r.ReservationId).LastOrDefault();
+        //        int i =Convert.ToInt32(test);
+        //        return RedirectToPage("Rooms");
+        //    }
+        //    else
+        //    {
+        //        return Page();
+        //    }
+        //}
+
+    }
+}
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

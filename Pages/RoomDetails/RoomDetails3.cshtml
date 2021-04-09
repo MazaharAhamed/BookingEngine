@@ -1,0 +1,171 @@
+﻿@page "/roomdetails103/{resid}"
+@model RoomDetails3Model
+@using Microsoft.EntityFrameworkCore;
+@using BookingEngine.Models;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using System;
+@using System.Globalization;
+@{
+}
+<html>
+<head>
+    <style>
+        .nextDiv {
+            position: absolute;
+            top: 150px;
+            right: 300px;
+        }
+
+        p {
+            font-size: 13px;
+        }
+
+        input, label {
+            display: block;
+        }
+
+        .space {
+            text-indent: 5em;
+        }
+
+        .a {
+            box-shadow: inset 0 0 20px #b3b3b3;
+            padding: 20px;
+            height: 1500px;
+        }
+
+        .b {
+            box-shadow: inset 0 0 20px #ddd;
+            padding: 20px;
+        }
+        .adults {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    @if (Model.Room.Count() > 0)
+    {
+        var us = CultureInfo.GetCultureInfo("en-US");
+        var dur = (Model.Reservation.ElementAt(Model.ResId).CheckOut - Model.Reservation.ElementAt(Model.ResId).CheckIn).TotalDays;
+        var stay = Model.Room.ElementAt(2).RoomCost * dur;
+        var taxes = stay * 0.19;
+        var totalcost = stay + taxes;
+        <div style="text-align:left; width:600px;" class="a">
+            <h4>@Model.Room.ElementAt(2).RoomName</h4>
+            <h5>@Model.Room.ElementAt(2).RoomCost.ToString("C", us)/Night</h5>
+            <br />
+            <img src="~/images/rsz_130745798.jpg" />
+            <br />
+            <h5 style="color:#0066cc; margin-top:30px;">Description</h5>
+            <p style="font-size:14px;">
+                COVID-19 UPDATE -  Kemble Inn is offer 4 guest rooms to one group/family at a time for minimum of 3 nights (Nov to Apr) or 7 night minimum (Jun to Oct).  Additional rooms available for extra charges.  Looking to rent an Gilded Age mansion for a day or two? Invite friends and family to join you for an exclusive getaway. Take over 4 guest rooms on the first and seconds floors and make yourselves at home. The ideal package for weddings, anniversaries, birthdays, corporate events, and more.
+
+                Please Note: The Mansion Buyout is exclusively for rooms. The restaurant and bar are closed but you may use these spaces.  Ask about us about catering or providing staff for you.
+            </p>
+            <h5 style="color:#0066cc;">Hotel Specific Amenities</h5>
+            <ul style="font-size:14px;">
+                <li>Individually controlled room temperature</li>
+                <li>400 thread count Matouk linen</li>
+                <li>SONY High Definition (HD) Flat Screen 40” / 46” / 52” TV’s</li>
+                <li>HD TV Channels with FREE On-Demand Movies</li>
+                <li>WaterworksTM Spa-inspired bathrooms with radiant heated floors</li>
+                <li>Heated towel racks (room dependent)</li>
+                <li>Malin + Goetz Bath products</li>
+                <li>Daily housekeeping and evening turn-down service</li>
+                <li>Complimentary WiFi</li>
+                <li>Complimentary bottled still and sparkling water</li>
+                <li>Complimentary Parking</li>
+                <li>Iron & ironing board, hairdryer and iPod dock/alarm clock</li>
+            </ul>
+            <h5 style="color:#0066cc;">Important Reservation Information</h5>
+            <ul style="font-size:14px;">
+                <li>12 and over age policy</li>
+                <li>Non-smoking facility</li>
+                <li>Check in time is: 3:00 PM</li>
+                <li>Check out time is: 11:00 AM</li>
+                <li>No pets are allowed on the premises</li>
+            </ul>
+            <p>
+                Deposit and cancellation policies depend on the rate plan you select and will be presented for your agreement before you complete your reservation.  Be sure to review these carefully.
+            </p>
+            <ul style="width:30%; float:left; font-size:13px;">
+                <li>Bath tub with spray jets</li>
+                <li>Non-smoking</li>
+                <li>Down/feather pillows</li>
+                <li>Mountain view</li>
+                <li>High Definition (HD) Flat Panel Television  - 32 inches or greater</li>
+            </ul>
+            <ul style="width:30%; float: left; font-size:13px;">
+                <li>Bathrobe</li>
+                <li>Turn down service</li>
+                <li>Self-controlled heating/cooling system</li>
+                <li>Luxury linen type</li>
+                <li>Full size mirror</li>
+                <li>In-room massage available</li>
+                <li>Rainfall showerhead</li>
+            </ul>
+            <ul style="width:30%; float: left; font-size:13px;">
+                <li>Fireplace</li>
+                <li>Air conditioning individually controlled in room</li>
+                <li>Honeymoon suites</li>
+                <li>VIP rooms</li>
+                <li>Upgraded bathroom amenities</li>
+                <li>Seating area with sofa/chair</li>
+                <li>Premium bedding</li>
+                <li>Free WiFi</li>
+            </ul>
+        </div>
+        @if (Model.ResId !=null)
+        {
+            <div class="nextDiv b">
+                <h5 style="color:#0066cc;">Reservation Details</h5>
+                <label>Check In</label>
+                @Html.DisplayFor(r => Model.Reservation.ElementAt(Model.ResId).CheckIn)
+                <label style="padding-top:8px;">Check Out</label>
+                @Html.DisplayFor(r => Model.Reservation.ElementAt(Model.ResId).CheckOut)
+                <label style="padding-top:8px;">Guests</label>
+                @Html.DisplayFor(r => Model.Reservation.ElementAt(Model.ResId).Adults)<label class="adults">&ensp;Adults</label>
+                <label></label>
+                <label>@dur Nights Stay &ensp; &ensp; @stay.ToString("C", us)</label>
+                <label>Taxes &emsp; &emsp; &emsp; &emsp; @taxes.ToString("C", us)</label>
+                <label>Total Room Cost&ensp;@totalcost.ToString("C", us)</label>
+                <br />
+                <p>Note that payments will be processed in USD</p>
+                @Html.CheckBox("Allow", true)
+                <p style="font-size:10px;">I have reviewed and agreed to the trip summary<br /> and policies,as well as any<br /> charges that may occur.</p>
+                <br />
+                <br />
+                <center><a class="btn btn-primary text-white" asp-route-id="@Model.Room.ElementAt(2).RoomId" asp-page="/CheckOut">Book Room</a></center>
+            </div>
+        }
+    }
+    else
+    {
+        <p>No Room Found</p>
+    }
+</body>
+@functions{
+    public class RoomDetails3Model : PageModel
+    {
+        private ApplicationDbContext _db;
+
+        public RoomDetails3Model(ApplicationDbContext context)
+        {
+            _db = context;
+        }
+
+        public IEnumerable<Room> Room { get; set; }
+
+        public IEnumerable<Reservation> Reservation { get; set; }
+
+        public int ResId { get; set; }
+
+        public async Task OnGet(int resid)
+        {
+            Room = await _db.Rooms.ToListAsync();
+            Reservation = await _db.Reservations.ToListAsync();
+            ResId = resid - 1;
+        }
+    }
+}

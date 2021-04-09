@@ -1,0 +1,69 @@
+﻿@page
+@model BookingDetailsModel
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.EntityFrameworkCore;
+@using BookingEngine.Models;
+@{
+}
+<html>
+<head>
+    <style>
+        td {
+            width: 1px;
+            white-space: nowrap;
+        }
+
+        table {
+            table-layout: fixed;
+        }
+
+        .t {
+            table-layout: fixed;
+        }
+    </style>
+</head>
+<body>
+    <table class="table table-striped table-bordered">
+        <tr class="table-secondary t">
+            <th><label asp-for="Booking.FirstOrDefault().BookingId"></label></th>
+            <th><label>RoomName</label></th>
+            <th><label>ReservationDetails</label></th>
+            <th><label>GuestName</label></th>
+            <th><label>Adults</label></th>
+        </tr>
+        @foreach (var item in Model.Booking)
+        {
+            var gname = item.GuestInfo.FirstName + item.GuestInfo.LastName;
+            //var r = Model.Room.ElementAt(item.RoomId-1).RoomName;
+            <tr>
+                <td>@Html.DisplayFor(b => item.BookingId)</td>
+                <td>@Html.DisplayFor(b => item.RoomId)</td>
+                <td>@Html.DisplayFor(b => item.Reservation.CheckIn) - @Html.DisplayFor(b => item.Reservation.CheckOut)</td>
+                <td>@gname</td>
+                <td>@Html.DisplayFor(b => item.Reservation.Adults)</td>
+            </tr>
+        }
+    </table>
+</body>
+</html>
+@functions{
+    public class BookingDetailsModel : PageModel
+    {
+        private readonly ApplicationDbContext _db;
+
+        public BookingDetailsModel(ApplicationDbContext context)
+        {
+            _db = context;
+        }
+
+        public IEnumerable<Booking> Booking { get; set; }
+
+        public IEnumerable<Room> Room { get; set; }
+
+        public void OnGet()
+        {
+            Booking = _db.Bookings.Include(b => b.Room).Include(b => b.Reservation).Include(b => b.GuestInfo).ToList();
+            Room = _db.Rooms.ToList();
+        }
+    }
+}

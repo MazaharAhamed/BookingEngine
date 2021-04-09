@@ -1,0 +1,106 @@
+﻿@page "/Rooms/{resid}"
+@model RoomsModel
+@using System.Globalization;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using BookingEngine.Models;
+@{
+}
+<html>
+<head>
+    @{var us = CultureInfo.GetCultureInfo("en-US");}
+    <center>6 Room Styles Found Starting at @Model.LeastCost.ToString("C", us)/Night</center>
+    <style>
+        input, label {
+            display: block;
+        }
+
+        .myDiv {
+            position: absolute;
+            top: 130px;
+        }
+
+        .space {
+            position: relative;
+            right: -100px;
+        }
+
+        .space1 {
+            position: relative;
+            right: -200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container myDiv">
+        @{var u = CultureInfo.GetCultureInfo("en-US");}
+        <div class="row">
+            <div class="form-group">
+                <img src="~/images/new.jpg" />
+                <label></label>
+                <label>Room 101</label>
+                <label>@Model.Room.ElementAt(0).RoomCost.ToString("C",u)/Night</label>
+                <a class="btn btn-outline-info" asp-route-resid="@Model.ResId" asp-page="/RoomDetails/RoomDetails">View more information</a>
+            </div>
+            <div class="form-group space">
+                <img src="~/images/3.jpg" />
+                <label></label>
+                <label>Room 102</label>
+                <label>@Model.Room.ElementAt(1).RoomCost.ToString("C",u)Night</label>
+                <a class="btn btn-outline-info" asp-route-resid="@Model.ResId" asp-page="/RoomDetails/RoomDetails2">View more information</a>
+            </div>
+            <div class="form-group space1">
+                <img src="~/images/4.jpg" />
+                <label></label>
+                <label>Room 103</label>
+                <label>@Model.Room.ElementAt(2).RoomCost.ToString("C",u)/Night</label>
+                <a class="btn btn-outline-info" asp-route-resid="@Model.ResId" asp-page="/RoomDetails/RoomDetails3">View more information</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group">
+                <img src="~/images/5.jpg" />
+                <label></label>
+                <label>Room 104</label>
+                <label>@Model.Room.ElementAt(3).RoomCost.ToString("C",u)/Night</label>
+                <a class="btn btn-outline-info" asp-route-resid="@Model.ResId" asp-page="/RoomDetails/RoomDetails4">View more information</a>
+            </div>
+            <div class="form-group space">
+                <img src="~/images/6.jpg" />
+                <label></label>
+                <label>Room 105</label>
+                <label>@Model.Room.ElementAt(4).RoomCost.ToString("C",u)/Night</label>
+                <a class="btn btn-outline-info" asp-route-resid="@Model.ResId" asp-page="/RoomDetails/RoomDetails5">View more information</a>
+            </div>
+            <div class="form-group space1">
+                <img src="~/images/rsz_1photo-1543321269-9d86d3680e1c.jpg" />
+                <label></label>
+                <label>Room 106</label>
+                <label>@Model.Room.ElementAt(5).RoomCost.ToString("C",u)/Night</label>
+                <a class="btn btn-outline-info" asp-route-resid="@Model.ResId" asp-page="/RoomDetails/RoomDetails6">View more information</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+@functions{
+    public class RoomsModel : PageModel
+    {
+        private ApplicationDbContext _db;
+
+        public RoomsModel(ApplicationDbContext context)
+        {
+            _db = context;
+        }
+
+        public IEnumerable<Room> Room { get; set; }
+        public double LeastCost { get; set; }
+        public int ResId { get; set; }
+
+        public void OnGet(int resid)
+        {
+            LeastCost = _db.Rooms.Min(l => l.RoomCost);
+            Room = _db.Rooms.ToList();
+            ResId = resid;
+        }
+    }
+}
