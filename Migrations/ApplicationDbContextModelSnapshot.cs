@@ -147,6 +147,9 @@ namespace BookingEngine.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Allow")
+                        .HasColumnType("bit");
+
                     b.Property<int?>("BookingId")
                         .HasColumnType("int");
 

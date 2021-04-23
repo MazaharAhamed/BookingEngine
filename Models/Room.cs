@@ -17,7 +17,9 @@ namespace BookingEngine.Models
         //public IList<Reservation> Reservations { get; set; }
 
         //public Reservation Reservation { get; set; }
-
         public Booking Booking { get; set; }
+
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Please accept terms and conditions")]
+        public bool Allow { get; set; }
     }
 }

@@ -9,5 +9,6 @@
 <strong class="text-danger">An error occurred while processing your request.</strong>
 <br />
 <br />
-<h5>Sorry the <label style="color:#0066cc;">@Model.Room.ElementAt(Model.Rid + 1).RoomName </label> you are trying to Book is already Booked on same date.</h5>
+<h5>Sorry the <label style="color:#0066cc;">@Model.Room.ElementAt(Model.Rid - 1).RoomName </label> you are trying to Book is already Booked on same date.</h5>
 <h6>Please try booking other Room or change date.</h6>
+<a asp-route-resid="@Model.ResId" asp-route-id="@Model.Rid" asp-page="/Rooms">Back To Rooms</a>

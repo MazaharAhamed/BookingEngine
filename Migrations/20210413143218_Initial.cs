@@ -100,7 +100,8 @@ namespace BookingEngine.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RoomName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RoomCost = table.Column<double>(type: "float", nullable: false),
-                    BookingId = table.Column<int>(type: "int", nullable: true)
+                    BookingId = table.Column<int>(type: "int", nullable: true),
+                    Allow = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {

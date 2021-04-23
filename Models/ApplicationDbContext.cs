@@ -2,11 +2,10 @@
 
 namespace BookingEngine.Models
 {
-    public class ApplicationDbContext:DbContext
+    public class ApplicationDbContext : DbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> opts):base(opts)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> opts) : base(opts)
         {
-
         }
 
         //#region Another way of using seeddata

@@ -28,7 +28,5 @@ namespace BookingEngine.Models
 
         [ForeignKey("GuestInfo")]
         public int GuestId { get; set; }
-
-
     }
 }

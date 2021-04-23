@@ -38,6 +38,7 @@
             box-shadow: inset 0 0 20px #ddd;
             padding: 20px;
         }
+
         .adults {
             display: inline-block;
         }
@@ -47,7 +48,7 @@
     @if (Model.Room.Count() > 0)
     {
         var us = CultureInfo.GetCultureInfo("en-US");
-        var dur = (Model.Reservation.ElementAt(Model.ResId).CheckOut - Model.Reservation.ElementAt(Model.ResId).CheckIn).TotalDays;
+        var dur = (Model.Reservation.ElementAt(Model.ResId - 1).CheckOut - Model.Reservation.ElementAt(Model.ResId - 1).CheckIn).TotalDays;
         var stay = Model.Room.ElementAt(4).RoomCost * dur;
         var taxes = stay * 0.19;
         var totalcost = stay + taxes;
@@ -116,16 +117,16 @@
                 <li>Free WiFi</li>
             </ul>
         </div>
-        @if (Model.ResId !=null)
+        @if (Model.ResId != null)
         {
             <div class="nextDiv b">
                 <h5 style="color:#0066cc;">Reservation Details</h5>
                 <label>Check In</label>
-                @Html.DisplayFor(r => Model.Reservation.ElementAt(Model.ResId).CheckIn)
+                @Html.DisplayFor(r => Model.Reservation.ElementAt(Model.ResId - 1).CheckIn)
                 <label style="padding-top:8px;">Check Out</label>
-                @Html.DisplayFor(r => Model.Reservation.ElementAt(Model.ResId).CheckOut)
+                @Html.DisplayFor(r => Model.Reservation.ElementAt(Model.ResId - 1).CheckOut)
                 <label style="padding-top:8px;">Guests</label>
-                @Html.DisplayFor(r => Model.Reservation.ElementAt(Model.ResId).Adults)<label class="adults">&ensp;Adults</label>
+                @Html.DisplayFor(r => Model.Reservation.ElementAt(Model.ResId - 1).Adults)<label class="adults">&ensp;Adults</label>
                 <label></label>
                 <label>@dur Nights Stay &ensp; &ensp; @stay.ToString("C", us)</label>
                 <label>Taxes &emsp; &emsp; &emsp; &emsp; @taxes.ToString("C", us)</label>
@@ -136,7 +137,7 @@
                 <p style="font-size:10px;">I have reviewed and agreed to the trip summary<br /> and policies,as well as any<br /> charges that may occur.</p>
                 <br />
                 <br />
-                <center><a class="btn btn-primary text-white" asp-route-id="@Model.Room.ElementAt(4).RoomId" asp-page="/CheckOut">Book Room</a></center>
+                <center><a class="btn btn-primary text-white" asp-route-id="@Model.Room.ElementAt(4).RoomId" asp-route-resid="@Model.ResId" asp-page="/CheckOut">Book Room</a></center>
             </div>
         }
     }
@@ -165,7 +166,7 @@
         {
             Room = await _db.Rooms.ToListAsync();
             Reservation = await _db.Reservations.ToListAsync();
-            ResId = resid - 1;
+            ResId = resid;
         }
     }
 }

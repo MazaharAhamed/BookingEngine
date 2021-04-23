@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookingEngine.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20210409150427_Initial")]
+    [Migration("20210413143218_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -148,6 +148,9 @@ namespace BookingEngine.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<bool>("Allow")
+                        .HasColumnType("bit");
 
                     b.Property<int?>("BookingId")
                         .HasColumnType("int");

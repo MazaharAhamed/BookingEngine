@@ -21,11 +21,17 @@ namespace BookingEngine.Pages
 
         public int Rid { get; set; }
 
+        public int ResId { get; set; }
+
+        public string RoomName { get; set; }
+
         public IEnumerable<Room> Room { get; set; }
 
-        public void OnGet(int id)
+        public void OnGet(int id, int resid)
         {
             Rid = id;
+            ResId = resid;
+            //RoomName = _db.Rooms.Where(r => r.RoomId == Rid).Select(r => r.RoomName).FirstOrDefault();
             Room = _db.Rooms.ToList();
         }
     }

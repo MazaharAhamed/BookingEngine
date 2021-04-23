@@ -145,7 +145,7 @@
                 <p style="font-size:12px;">Note that payments will be processed in USD</p>
                 @Html.CheckBox("Allow", true)
                 <p style="font-size:10px;">I have reviewed and agreed to the trip summary<br /> and policies,as well as any<br /> charges that may occur.</p>
-                <center><input type="submit" class="btn btn-primary" asp-route-id="@Model.Rid" value="Book Stay" /></center>
+                <center><input type="submit" class="btn btn-primary" asp-route-id="@Model.Rid" asp-route-resid="@Model.ResId" value="Book Stay" /></center>
             }
     </form>
     </div>
@@ -188,13 +188,16 @@
 
         public string disp { get; set; }
 
-        public void OnGet(int id)
+        public int ResId { get; set; }
+
+        public void OnGet(int id, int resid)
         {
             Room = _db.Rooms.ToList();
             Reservation = _db.Reservations.ToList();
             Book = _db.Bookings.ToList();
             RDetails = GetRoom(id);
             Rid = id;
+            ResId = resid;
             if (GetReservation() == null)
             {
                 disp = "no reservation found";
@@ -215,12 +218,11 @@
             return (_db.Reservations.OrderBy(r => r.ReservationId).Select(r => r.CheckOut).LastOrDefault() - _db.Reservations.OrderBy(r => r.ReservationId).Select(r => r.CheckIn).LastOrDefault()).TotalDays;
         }
 
-        public IActionResult OnPost(int id)
+        public IActionResult OnPost(int id, int resid)
         {
-            //Rid = id;
             int bRoomId = id;
             Rid = id;
-            int bReservationId = _db.Reservations.OrderBy(r => r.ReservationId).Select(r => r.ReservationId).LastOrDefault();
+            int bReservationId = _db.Reservations.Where(r => r.ReservationId == resid).Select(r => r.ReservationId).FirstOrDefault();
             if (ModelState.IsValid)
             {
                 _db.GuestInfo.Add(GuestInfo);
@@ -233,19 +235,10 @@
                 pi.FullNameOnCard = PaymentInfo.FullNameOnCard;
                 pi.Cvv = PaymentInfo.Cvv;
                 _db.PaymentInfo.Add(pi);
-                var bCheckIn = _db.Reservations.Find(bReservationId).CheckIn;
-                var bCheckOut = _db.Reservations.Find(bReservationId).CheckOut;
-                foreach (var item in _db.Bookings)
+                if (CheckAvailability(resid, id) == false)
                 {
-                    if (_db.Reservations.Find(item.ReservationId).CheckIn == bCheckIn && _db.Reservations.Find(item.ReservationId).CheckOut == bCheckOut)
-                    {
-                        if (_db.Bookings.Any(x => x.RoomId == bRoomId))
-                        {
-                            return RedirectToPage("Error");
-                        }
-                    }
+                    return RedirectToPage("Error", new { ResId = resid, id });
                 }
-                //CheckAvailability();
                 Booking bk = new Booking();
                 bk.RoomId = bRoomId;
                 bk.ReservationId = bReservationId;
@@ -260,24 +253,24 @@
             }
         }
 
-        //public IActionResult CheckAvailability()
-        //{
-        //    int bReservationId = _db.Reservations.OrderBy(r => r.ReservationId).Select(r => r.ReservationId).LastOrDefault();
-        //    int bRoomId = Rid;
-        //    var bCheckIn = _db.Reservations.Find(bReservationId).CheckIn;
-        //    var bCheckOut = _db.Reservations.Find(bReservationId).CheckOut;
-        //    foreach (var item in _db.Bookings)
-        //    {
-        //        if (_db.Reservations.Find(item.ReservationId).CheckIn == bCheckIn && _db.Reservations.Find(item.ReservationId).CheckOut == bCheckOut)
-        //        {
-        //            if (_db.Bookings.Any(x => x.RoomId == bRoomId))
-        //            {
-        //                return RedirectToPage("Error");
-        //            }
-        //        }
-        //    }
-        //    return new EmptyResult();
-        //}
+        public bool CheckAvailability(int resid, int id)
+        {
+            int bReservationId = _db.Reservations.Where(r => r.ReservationId == resid).Select(r => r.ReservationId).FirstOrDefault();
+            int bRoomId = Rid;
+            var bCheckIn = _db.Reservations.Find(bReservationId).CheckIn;
+            var bCheckOut = _db.Reservations.Find(bReservationId).CheckOut;
+            foreach (var item in _db.Bookings)
+            {
+                if (_db.Reservations.Find(item.ReservationId).CheckIn == bCheckIn && _db.Reservations.Find(item.ReservationId).CheckOut == bCheckOut)
+                {
+                    if (_db.Bookings.Any(x => x.RoomId == bRoomId))
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
     }
 }
 @section Scripts{
